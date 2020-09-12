@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Singgah Ka Sumbar</string>
+    <string name="title_activity_lokasi_terdekat">Map</string>
+    <string name="title_activity_cari_lokasi">Map</string>
+    <string name="title_activity_testing">Map</string>
+    <string name="title_activity_cari_lokasi2">Map</string>
+    <string name="title_activity_cari_lokasi3">Map</string>
+    <string name="title_activity_ok">Map</string>
+</resources>

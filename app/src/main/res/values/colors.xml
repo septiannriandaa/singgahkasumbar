@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+
+    <color name="tingkat1">#ececec</color>
+    <color name="tingkat2">#f5d061</color>
+    <color name="tingkat3">#74412b</color>
+    <color name="tingkat4">#253f5b</color>
+<!--    -->
+<!--    <color name="tingkat1">#ececec</color>-->
+<!--    <color name="tingkat2">#f5d061</color>-->
+<!--    <color name="tingkat3">#e6af2e</color>-->
+<!--    <color name="tingkat4">#282f44</color>-->
+</resources>
