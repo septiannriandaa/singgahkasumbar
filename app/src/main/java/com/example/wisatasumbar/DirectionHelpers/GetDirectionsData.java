@@ -19,10 +19,6 @@ public class GetDirectionsData extends AsyncTask<Object,String,String> {
     public String distance,duration;
     LatLng latLng;
 
-    public String getDistance() {
-        return distance;
-    }
-
     public void setDistance(String distance) {
         this.distance = distance;
     }
@@ -50,12 +46,12 @@ public class GetDirectionsData extends AsyncTask<Object,String,String> {
         duration = directionlist.get("duration");
         setDistance(distance);
 
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(latLng);
-        markerOptions.title("Waktu : "+duration);
-        markerOptions.snippet("Jarak : " +distance);
-        markerOptions.icon((BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-        mMap.addMarker(markerOptions);
+//        MarkerOptions markerOptions = new MarkerOptions();
+//        markerOptions.position(latLng);
+//        markerOptions.title("Waktu : "+duration);
+//        markerOptions.snippet("Jarak : " +distance);
+//        markerOptions.icon((BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+//        mMap.addMarker(markerOptions);
     }
 
 }

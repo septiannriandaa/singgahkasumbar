@@ -388,11 +388,4 @@ public class CariLokasi extends FragmentActivity implements OnMapReadyCallback, 
             currentPolyline.remove();
         currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
     }
-
-    public PendingIntent getPendingIntent() {
-        Intent intent = new Intent(this,MyLocationService.class);
-        intent.setAction(MyLocationService.ACTION_PROCESS_UPDATE);
-        return PendingIntent.getBroadcast(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
-    }
-
 }

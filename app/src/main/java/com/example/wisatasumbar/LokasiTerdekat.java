@@ -68,8 +68,8 @@ import java.util.Random;
 public class LokasiTerdekat extends FragmentActivity implements OnMapReadyCallback, LocationListener, GoogleMap.OnMarkerClickListener, GeoQueryEventListener, IOnLoadLocationListene, TaskLoadedCallback {
     private static final Object REQUEST_LOCATION = 112;
     private GoogleMap mMap;
-    private DatabaseReference mLokasi,lokasiUser,ref;
-    private Marker marker,currentUser;
+    private DatabaseReference mLokasi, lokasiUser, ref;
+    private Marker marker, currentUser;
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
     private GeoFire geoFire;
@@ -77,7 +77,7 @@ public class LokasiTerdekat extends FragmentActivity implements OnMapReadyCallba
     private List<LatLng> areaWisata;
     private IOnLoadLocationListene listener;
     private Polyline currentPolyline;
-    ArrayList<Wisata> listt = new ArrayList<>();
+    ArrayList<Wisata> list = new ArrayList<>();
     FusedLocationProviderClient fusedLocationProviderClient;
 
     @Override
@@ -98,10 +98,10 @@ public class LokasiTerdekat extends FragmentActivity implements OnMapReadyCallba
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()) {
+                if (dataSnapshot.exists()) {
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         Wisata wisata = ds.getValue(Wisata.class);
-                        listt.add(wisata);
+                        list.add(wisata);
                     }
                 }
             }
@@ -113,33 +113,34 @@ public class LokasiTerdekat extends FragmentActivity implements OnMapReadyCallba
         });
 
     }
-    public void myLocation(View v){
+
+    public void myLocation(View v) {
         LocationManager lm = (LocationManager)
-                getSystemService(Context. LOCATION_SERVICE ) ;
+                getSystemService(Context.LOCATION_SERVICE);
         boolean gps_enabled = false;
         boolean network_enabled = false;
         try {
-            gps_enabled = lm.isProviderEnabled(LocationManager. GPS_PROVIDER ) ;
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
         } catch (Exception e) {
-            e.printStackTrace() ;
+            e.printStackTrace();
         }
         try {
-            network_enabled = lm.isProviderEnabled(LocationManager. NETWORK_PROVIDER ) ;
+            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
         } catch (Exception e) {
-            e.printStackTrace() ;
+            e.printStackTrace();
         }
 
         if (ContextCompat.checkSelfPermission(LokasiTerdekat.this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(LokasiTerdekat.this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)){
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
                 ActivityCompat.requestPermissions(LokasiTerdekat.this,
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            }else{
+            } else {
                 ActivityCompat.requestPermissions(LokasiTerdekat.this,
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             }
-        }else if (!gps_enabled && !network_enabled) {
+        } else if (!gps_enabled && !network_enabled) {
             new AlertDialog.Builder(this)
                     .setMessage("Silahkan Aktifkan Lokasi Anda")
                     .setPositiveButton("Settings", new
@@ -151,46 +152,30 @@ public class LokasiTerdekat extends FragmentActivity implements OnMapReadyCallba
                             })
                     .setNegativeButton("Cancel", null)
                     .show();
-        }
-        else{
-            if(currentUser != null){
+        } else {
+            if (currentUser != null) {
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentUser.getPosition(), 15.0f));
-            }else {
+            } else {
                 Intent intent = getIntent();
                 finish();
                 startActivity(intent);
             }
         }
     }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                           int[] grantResults){
-        switch (requestCode){
-            case 1: {
-                if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    if (ContextCompat.checkSelfPermission(LokasiTerdekat.this,
-                            Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED){
-                        Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
-                    }
-                }else{
-                    Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
-                }
-                return;
-            }
-        }
-    }
+
     private void settingGeoFire() {
         lokasiUser = FirebaseDatabase.getInstance().getReference().child("infoUser").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         geoFire = new GeoFire(lokasiUser);
     }
-    private void initArea(){
+
+    private void initArea() {
         listener = this;
         FirebaseDatabase.getInstance().getReference().child("dataWisata")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         List<Wisata> latLngList = new ArrayList<>();
-                        for(DataSnapshot s : dataSnapshot.getChildren()){
+                        for (DataSnapshot s : dataSnapshot.getChildren()) {
                             Wisata latLng = s.getValue(Wisata.class);
                             latLngList.add(latLng);
                         }
@@ -205,15 +190,15 @@ public class LokasiTerdekat extends FragmentActivity implements OnMapReadyCallba
     }
 
     private void buildLocationCallback() {
-        locationCallback = new LocationCallback(){
+        locationCallback = new LocationCallback() {
             @Override
-            public void onLocationResult(final LocationResult locationResult){
-                if(mMap != null){
+            public void onLocationResult(final LocationResult locationResult) {
+                if (mMap != null) {
                     geoFire.setLocation("Lokasi Anda", new GeoLocation(locationResult.getLastLocation().getLatitude(),
                             locationResult.getLastLocation().getLongitude()), new GeoFire.CompletionListener() {
                         @Override
                         public void onComplete(String key, DatabaseError error) {
-                            if(currentUser != null) currentUser.remove();
+                            if (currentUser != null) currentUser.remove();
                             currentUser = mMap.addMarker(new MarkerOptions()
                                     .position(new LatLng(locationResult.getLastLocation().getLatitude(),
                                             locationResult.getLastLocation().getLongitude())).title("Lokasi Anda"));
@@ -248,10 +233,20 @@ public class LokasiTerdekat extends FragmentActivity implements OnMapReadyCallba
         mMap = googleMap;
         mMap.getUiSettings().setZoomControlsEnabled(true);
 
-        LatLng awal = new LatLng(-0.661100,100.513922);
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(awal,8));
+        LatLng awal = new LatLng(-0.661100, 100.513922);
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(awal, 8));
 
-        fusedLocationProviderClient.requestLocationUpdates(locationRequest,locationCallback, Looper.myLooper() );
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
         for(LatLng latLng : areaWisata){
             mMap.addCircle(new CircleOptions().center(latLng)
                     .radius(5000)
@@ -315,18 +310,6 @@ public class LokasiTerdekat extends FragmentActivity implements OnMapReadyCallba
         return false;
     }
 
-    public void showAlert(){
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setMessage("Ada wisata di dekat Anda");
-        alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
-        alert.create().show();
-    }
-
     @Override
     public void onKeyEntered(String key, GeoLocation location) {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -368,13 +351,7 @@ public class LokasiTerdekat extends FragmentActivity implements OnMapReadyCallba
         Toast.makeText(this, ""+error.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
-    public void lokTer(View v){
-//        Log.d("MyLog","Lat is: "+currentUser.getPosition().latitude + ", " +
-        locationEnabled();
-
-    }
-
-    private void locationEnabled () {
+    public void cariLokasiTerdekat (View v) {
         LocationManager lm = (LocationManager)
                 getSystemService(Context. LOCATION_SERVICE );
         boolean gps_enabled = false;
@@ -391,7 +368,7 @@ public class LokasiTerdekat extends FragmentActivity implements OnMapReadyCallba
         }
 
         if (ContextCompat.checkSelfPermission(LokasiTerdekat.this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+               Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
             if (ActivityCompat.shouldShowRequestPermissionRationale(LokasiTerdekat.this,
                     Manifest.permission.ACCESS_FINE_LOCATION)){
                 ActivityCompat.requestPermissions(LokasiTerdekat.this,
@@ -421,32 +398,6 @@ public class LokasiTerdekat extends FragmentActivity implements OnMapReadyCallba
                 startActivity(intent);
             }
         }
-    }
-    private void sendNotification(String title, String content) {
-        Toast.makeText(this,""+content,Toast.LENGTH_SHORT).show();
-        String NOTFICATION_CHANNEL_ID = "wisata_multiple_location";
-        NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            NotificationChannel notificationChannel = new NotificationChannel(NOTFICATION_CHANNEL_ID,"My Notification",
-                    NotificationManager.IMPORTANCE_DEFAULT);
-
-            notificationChannel.setDescription("Channel Description");
-            notificationChannel.enableLights(true);
-            notificationChannel.setLightColor(Color.RED);
-            notificationChannel.setVibrationPattern(new long[]{0,1000,500,1000});
-            notificationChannel.enableVibration(true);
-            notificationManager.createNotificationChannel(notificationChannel);
-        }
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this,NOTFICATION_CHANNEL_ID);
-        builder.setContentTitle(title)
-                .setContentText(content)
-                .setAutoCancel(false)
-                .setSmallIcon(R.mipmap.icon_app)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.mipmap.icon_app));
-
-        Notification notification = builder.build();
-        notificationManager.notify(new Random().nextInt(),notification);
     }
 
     @Override
@@ -480,178 +431,33 @@ public class LokasiTerdekat extends FragmentActivity implements OnMapReadyCallba
         String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters + "&key=" + getString(R.string.google_maps_key);
         return url;
     }
-    private void cobaBaru(){
-        if(ref != null){
-            ref.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if(dataSnapshot.exists()){
-                        String hasilAkhir = null;
-                        Integer jarakTujuan = null;
-                        LatLng lokasiAwal = new LatLng(currentUser.getPosition().latitude,currentUser.getPosition().longitude);
-                        ArrayList<Wisata> list = new ArrayList<>();
-                        for(DataSnapshot ds : dataSnapshot.getChildren()){
-                            Wisata wisata = ds.getValue(Wisata.class);
-                            list.add(wisata);
-                        }
-                        for(int i = 0;i < list.size(); i++){
-                            LatLng lokasiTujuan = new LatLng(list.get(i).getLatitude(),list.get(i).getLongtitude());
-                            double distance = SphericalUtil.computeDistanceBetween(lokasiAwal, lokasiTujuan);
-                            int jarakHitung = (int)distance / 1000;
-                            if(jarakTujuan != null){
-                                if(jarakHitung <= jarakTujuan){
-                                    jarakTujuan = jarakHitung;
-                                    hasilAkhir = list.get(i).getNamaWisata();
-                                    Log.d("LOG", "Data berubah"+list.get(i).getLatitude()+"+"+list.get(i).getLongtitude());
-                                }
-                            }else{
-                                jarakTujuan = jarakHitung;
-                                hasilAkhir = list.get(i).getNamaWisata();
-                            }
-                        }
-                        for(DataSnapshot ds : dataSnapshot.getChildren()){
-                            Wisata wisata = ds.getValue(Wisata.class);
-                            String lokasi = hasilAkhir;
-                            if(lokasi.equalsIgnoreCase(wisata.getNamaWisata())){
-                                wisata.getWisataId();
-                                LatLng lokasiAkhir = new LatLng(wisata.getLatitude(), wisata.getLongtitude());
-                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lokasiAkhir,15.0f));
-                                lokasiTujuan = new MarkerOptions().position(new LatLng(wisata.getLatitude(), wisata.getLongtitude())).title(wisata.getNamaWisata());
-                                new FetchURL(LokasiTerdekat.this).execute(getUrl(currentUser.getPosition(), lokasiTujuan.getPosition(), "driving"), "driving");
-                            }
-                        }
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-        }
-    }
 
     private void simpleHillClimbing(){
         Integer jarakTujuan = null;
         LatLng lokasiAwal = new LatLng(currentUser.getPosition().latitude,currentUser.getPosition().longitude);
         LatLng lokasiAkhir = null;
 
-        for(int i = 0;i < listt.size(); i++){
-            LatLng lokasiHitung = new LatLng(listt.get(i).getLatitude(),listt.get(i).getLongtitude());
+        for(int i = 0;i < list.size(); i++){
+            LatLng lokasiHitung = new LatLng(list.get(i).getLatitude(),list.get(i).getLongtitude());
             double distance = SphericalUtil.computeDistanceBetween(lokasiAwal, lokasiHitung);
             int jarakHitung = (int)distance / 1000;
 
             if(jarakTujuan != null){
-                if(jarakHitung <= jarakTujuan){
+                if(jarakHitung < jarakTujuan){
                     jarakTujuan = jarakHitung;
-                    lokasiAkhir = new LatLng(listt.get(i).getLatitude(),listt.get(i).getLongtitude());
+                    lokasiAkhir = new LatLng(list.get(i).getLatitude(),list.get(i).getLongtitude());
                 }
             }else{
                 jarakTujuan = jarakHitung;
-                lokasiAkhir = new LatLng(listt.get(i).getLatitude(),listt.get(i).getLongtitude());
+                lokasiAkhir = new LatLng(list.get(i).getLatitude(),list.get(i).getLongtitude());
             }
         }
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lokasiAkhir,15.0f));
         lokasiTujuan = new MarkerOptions().position(new LatLng(lokasiAkhir.latitude, lokasiAkhir.longitude));
-        new FetchURL(LokasiTerdekat.this).execute(getUrl(currentUser.getPosition(), lokasiTujuan.getPosition(), "driving"), "driving");
+        new FetchURL(LokasiTerdekat.this).execute(getUrl(currentUser.getPosition(),
+                lokasiTujuan.getPosition(), "driving"), "driving");
     }
-    private void methodBaru(){
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                String hasilAkhir = null;
-                Integer jarakTujuan = null;
-                LatLng lokasiAwal = new LatLng(currentUser.getPosition().latitude,currentUser.getPosition().longitude);
-                LatLng lokasiAkhir = null;
-                ArrayList<Wisata> list = new ArrayList<>();
-                if(dataSnapshot.exists()) {
-                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        Wisata wisata = ds.getValue(Wisata.class);
-                        list.add(wisata);
-                    }
-                }
-                for(int i = 0;i < list.size(); i++){
-                    LatLng lokasiHitung = new LatLng(list.get(i).getLatitude(),list.get(i).getLongtitude());
-                    double distance = SphericalUtil.computeDistanceBetween(lokasiAwal, lokasiHitung);
-                    int jarakHitung = (int)distance / 1000;
-                    if(jarakTujuan != null){
-                        if(jarakHitung <= jarakTujuan){
-                            jarakTujuan = jarakHitung;
-//                            hasilAkhir = list.get(i).getNamaWisata();
-                            lokasiAkhir = new LatLng(list.get(i).getLatitude(),list.get(i).getLongtitude());
-                        }
-                    }else{
-                        jarakTujuan = jarakHitung;
-//                        hasilAkhir = list.get(i).getNamaWisata();
-                        lokasiAkhir = new LatLng(list.get(i).getLatitude(),list.get(i).getLongtitude());
-                    }
-                }
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lokasiAkhir,15.0f));
-                lokasiTujuan = new MarkerOptions().position(new LatLng(lokasiAkhir.latitude, lokasiAkhir.longitude));
-                new FetchURL(LokasiTerdekat.this).execute(getUrl(currentUser.getPosition(), lokasiTujuan.getPosition(), "driving"), "driving");
-//                Log.d("LOG", "Data berubah"+lokasiAkhir);
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-    private void lokasiTerdekat(){
-        if(ref != null){
-            ref.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if(dataSnapshot.exists()){
-                        String compare = null;
-                        Integer akhir = null;
-                        LatLng locationA = new LatLng(currentUser.getPosition().latitude,currentUser.getPosition().longitude);
-                        ArrayList<Wisata> list = new ArrayList<>();
-
-                        for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                            Wisata wisata = ds.getValue(Wisata.class);
-                            list.add(wisata);
-                        }
-                        for (int i = 0; i < list.size(); i++) {
-                            LatLng latLng = new LatLng(list.get(i).getLatitude(),list.get(i).getLongtitude());
-                            double distance = SphericalUtil.computeDistanceBetween(locationA, latLng);
-                            int hasil = (int)distance / 1000;
-                            if(akhir != null){
-                                if(hasil <= akhir){
-                                    akhir = hasil;
-                                    compare = list.get(i).getNamaWisata();
-//                                    Log.d("LOG", "Data berubah");
-                                }
-                            }else{
-                                akhir = hasil;
-                                compare = list.get(i).getNamaWisata();
-//                                Log.d("LOG", "Data Tetap " + iter++);
-                            }
-//                            Log.d("LOG", "Data Tetap " + compare);
-                        }
-                        for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                            Wisata wisata = ds.getValue(Wisata.class);
-                            String lokasi = compare;
-                            if(lokasi.equalsIgnoreCase(wisata.getNamaWisata())){
-                                wisata.getWisataId();
-                                LatLng latLng = new LatLng(wisata.getLatitude(), wisata.getLongtitude());
-                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,15.0f));
-                                lokasiTujuan = new MarkerOptions().position(new LatLng(wisata.getLatitude(), wisata.getLongtitude())).title(wisata.getNamaWisata());
-                                new FetchURL(LokasiTerdekat.this).execute(getUrl(currentUser.getPosition(), lokasiTujuan.getPosition(), "driving"), "driving");
-                            }
-                        }
-//                        Log.d("LOG", "Loksai "+compare+" dengan jarak " + akhir +" KM");
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Toast.makeText(LokasiTerdekat.this,databaseError.getMessage(),Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-    }
 
     @Override
     public void onTaskDone(Object... values) {

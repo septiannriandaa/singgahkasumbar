@@ -31,9 +31,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity
-            android:name=".ok"
-            android:label="@string/title_activity_ok"></activity>
         <activity android:name=".SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -44,7 +41,6 @@
             android:name=".CariLokasi3"
             android:label="@string/title_activity_cari_lokasi3" />
         <activity android:name=".Tentang" />
-        <activity android:name=".CobaUpdate" />
         <activity android:name=".Test" />
         <activity android:name=".HalamanDetail" />
         <activity android:name=".DaftarWisata" />

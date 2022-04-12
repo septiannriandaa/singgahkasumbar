@@ -72,9 +72,8 @@ import java.util.Random;
 public class CariLokasi3 extends FragmentActivity implements OnMapReadyCallback, LocationListener, GoogleMap.OnMarkerClickListener, GeoQueryEventListener, IOnLoadLocationListene, TaskLoadedCallback {
     private int waktu_loading = 3000;
     private GoogleMap mMap;
-    private SearchView searchView;
-    private DatabaseReference mLokasi,lokasiUser,ref;
-    private Marker marker,currentUser;
+    private DatabaseReference mLokasi, lokasiUser, ref;
+    private Marker marker, currentUser;
     private MarkerOptions lokasiTujuan;
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
@@ -85,6 +84,7 @@ public class CariLokasi3 extends FragmentActivity implements OnMapReadyCallback,
     private Polyline currentPolyline;
     private String url;
     Spinner pilihLokasi;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,7 +92,6 @@ public class CariLokasi3 extends FragmentActivity implements OnMapReadyCallback,
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
 
         pilihLokasi = (Spinner) findViewById(R.id.pilihlokasi);
-        ;
         buildLocationCallback();
         updateLocation();
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(CariLokasi3.this);
@@ -121,28 +120,29 @@ public class CariLokasi3 extends FragmentActivity implements OnMapReadyCallback,
             }
         });
 
-            pilihLokasi.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if(currentUser != null){
-                                cariLokasi();
-                            }else{
-                               locationEnabled();
-                            }
+        pilihLokasi.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (currentUser != null) {
+                            cariLokasi();
+                        } else {
+                            locationEnabled();
                         }
-                    },waktu_loading);
+                    }
+                }, waktu_loading);
 
-                }
+            }
 
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
-                }
-            });
-        }
+            }
+        });
+    }
+
     private void cariLokasi() {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -167,33 +167,34 @@ public class CariLokasi3 extends FragmentActivity implements OnMapReadyCallback,
             }
         });
     }
-    private void locationEnabled () {
+
+    private void locationEnabled() {
         LocationManager lm = (LocationManager)
-                getSystemService(Context. LOCATION_SERVICE ) ;
+                getSystemService(Context.LOCATION_SERVICE);
         boolean gps_enabled = false;
         boolean network_enabled = false;
         try {
-            gps_enabled = lm.isProviderEnabled(LocationManager. GPS_PROVIDER ) ;
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
         } catch (Exception e) {
-            e.printStackTrace() ;
+            e.printStackTrace();
         }
         try {
-            network_enabled = lm.isProviderEnabled(LocationManager. NETWORK_PROVIDER ) ;
+            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
         } catch (Exception e) {
-            e.printStackTrace() ;
+            e.printStackTrace();
         }
 
         if (ContextCompat.checkSelfPermission(CariLokasi3.this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(CariLokasi3.this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)){
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
                 ActivityCompat.requestPermissions(CariLokasi3.this,
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            }else{
+            } else {
                 ActivityCompat.requestPermissions(CariLokasi3.this,
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             }
-        }else if (!gps_enabled && !network_enabled) {
+        } else if (!gps_enabled && !network_enabled) {
             new AlertDialog.Builder(this)
                     .setMessage("Silahkan Aktifkan Lokasi Anda")
                     .setPositiveButton("Settings", new
@@ -205,40 +206,40 @@ public class CariLokasi3 extends FragmentActivity implements OnMapReadyCallback,
                             })
                     .setNegativeButton("Cancel", null)
                     .show();
-        }
-        else {
-                Intent intent = getIntent();
-                finish();
-                startActivity(intent);
+        } else {
+            Intent intent = getIntent();
+            finish();
+            startActivity(intent);
         }
     }
-    public void myLocation(View v){
+
+    public void myLocation(View v) {
         LocationManager lm = (LocationManager)
-                getSystemService(Context. LOCATION_SERVICE ) ;
+                getSystemService(Context.LOCATION_SERVICE);
         boolean gps_enabled = false;
         boolean network_enabled = false;
         try {
-            gps_enabled = lm.isProviderEnabled(LocationManager. GPS_PROVIDER ) ;
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
         } catch (Exception e) {
-            e.printStackTrace() ;
+            e.printStackTrace();
         }
         try {
-            network_enabled = lm.isProviderEnabled(LocationManager. NETWORK_PROVIDER ) ;
+            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
         } catch (Exception e) {
-            e.printStackTrace() ;
+            e.printStackTrace();
         }
 
         if (ContextCompat.checkSelfPermission(CariLokasi3.this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(CariLokasi3.this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)){
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
                 ActivityCompat.requestPermissions(CariLokasi3.this,
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            }else{
+            } else {
                 ActivityCompat.requestPermissions(CariLokasi3.this,
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             }
-        }else if (!gps_enabled && !network_enabled) {
+        } else if (!gps_enabled && !network_enabled) {
             new AlertDialog.Builder(this)
                     .setMessage("Silahkan Aktifkan Lokasi Anda")
                     .setPositiveButton("Settings", new
@@ -250,29 +251,30 @@ public class CariLokasi3 extends FragmentActivity implements OnMapReadyCallback,
                             })
                     .setNegativeButton("Cancel", null)
                     .show();
-        }
-        else{
-            if(currentUser != null){
+        } else {
+            if (currentUser != null) {
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentUser.getPosition(), 15.0f));
-            }else {
+            } else {
                 Intent intent = getIntent();
                 finish();
                 startActivity(intent);
             }
         }
     }
+
     private void settingGeoFire() {
         lokasiUser = FirebaseDatabase.getInstance().getReference().child("infoUser").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         geoFire = new GeoFire(lokasiUser);
     }
-    private void initArea(){
+
+    private void initArea() {
         listener = this;
         FirebaseDatabase.getInstance().getReference().child("dataWisata")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         List<Wisata> latLngList = new ArrayList<>();
-                        for(DataSnapshot s : dataSnapshot.getChildren()){
+                        for (DataSnapshot s : dataSnapshot.getChildren()) {
                             Wisata latLng = s.getValue(Wisata.class);
                             latLngList.add(latLng);
                         }
@@ -287,15 +289,15 @@ public class CariLokasi3 extends FragmentActivity implements OnMapReadyCallback,
     }
 
     private void buildLocationCallback() {
-        locationCallback = new LocationCallback(){
+        locationCallback = new LocationCallback() {
             @Override
-            public void onLocationResult(final LocationResult locationResult){
-                if(mMap != null){
+            public void onLocationResult(final LocationResult locationResult) {
+                if (mMap != null) {
                     geoFire.setLocation("Lokasi Anda", new GeoLocation(locationResult.getLastLocation().getLatitude(),
                             locationResult.getLastLocation().getLongitude()), new GeoFire.CompletionListener() {
                         @Override
                         public void onComplete(String key, DatabaseError error) {
-                            if(currentUser != null) currentUser.remove();
+                            if (currentUser != null) currentUser.remove();
                             currentUser = mMap.addMarker(new MarkerOptions()
                                     .position(new LatLng(locationResult.getLastLocation().getLatitude(),
                                             locationResult.getLastLocation().getLongitude())).title("Lokasi Anda"));
@@ -309,10 +311,11 @@ public class CariLokasi3 extends FragmentActivity implements OnMapReadyCallback,
         };
 
     }
-    private void updateLocation(){
+
+    private void updateLocation() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+                != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         buildLocationRequest();
@@ -323,6 +326,16 @@ public class CariLokasi3 extends FragmentActivity implements OnMapReadyCallback,
         locationRequest = new LocationRequest();
         locationRequest.setInterval(5000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
 
         /*locationRequest = new LocationRequest();
@@ -345,8 +358,8 @@ public class CariLokasi3 extends FragmentActivity implements OnMapReadyCallback,
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        LatLng awal = new LatLng(-0.661100,100.513922);
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(awal,8));
+        LatLng awal = new LatLng(-0.661100, 100.513922);
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(awal, 8));
 
         googleMap.setOnMarkerClickListener(this);
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
@@ -366,7 +379,17 @@ public class CariLokasi3 extends FragmentActivity implements OnMapReadyCallback,
 
             }
         });
-        fusedLocationProviderClient.requestLocationUpdates(locationRequest,locationCallback, Looper.myLooper());
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
         for(LatLng latLng : areaWisata){
             mMap.addCircle(new CircleOptions().center(latLng)
                     .radius(5000)
@@ -378,15 +401,7 @@ public class CariLokasi3 extends FragmentActivity implements OnMapReadyCallback,
             geoQuery.addGeoQueryEventListener(CariLokasi3.this);
         }
     }
-    public void ukurJarak(){
-        url = getUrl(currentUser.getPosition(), lokasiTujuan.getPosition(), "driving");
-        Object dataTransfer[] = new Object[3];
-        GetDirectionsData getDirectionsData = new GetDirectionsData();
-        dataTransfer[0] = mMap;
-        dataTransfer[1] = url;
-        dataTransfer[2] = new LatLng(lokasiTujuan.getPosition().latitude, lokasiTujuan.getPosition().longitude);
-        getDirectionsData.execute(dataTransfer);
-    }
+
     @Override
     protected void onStop() {
         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
@@ -428,19 +443,6 @@ public class CariLokasi3 extends FragmentActivity implements OnMapReadyCallback,
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(CariLokasi3.this);
-    }
-
-    public void showAlert(){
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle("Pemberitahuan");
-        alert.setMessage("Ada wisata di dekat Anda");
-        alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
-        alert.create().show();
     }
     @Override
     public void onLoadLocationFailed(String message) {
@@ -487,32 +489,6 @@ public class CariLokasi3 extends FragmentActivity implements OnMapReadyCallback,
     public void onGeoQueryError(DatabaseError error) {
         Toast.makeText(this, ""+error.getMessage(), Toast.LENGTH_SHORT).show();
     }
-    private void sendNotification(String title, String content) {
-        Toast.makeText(this,""+content,Toast.LENGTH_SHORT).show();
-        String NOTFICATION_CHANNEL_ID = "wisata_multiple_location";
-        NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            NotificationChannel notificationChannel = new NotificationChannel(NOTFICATION_CHANNEL_ID,"My Notification",
-                    NotificationManager.IMPORTANCE_DEFAULT);
-
-            notificationChannel.setDescription("Channel Description");
-            notificationChannel.enableLights(true);
-            notificationChannel.setLightColor(Color.RED);
-            notificationChannel.setVibrationPattern(new long[]{0,1000,500,1000});
-            notificationChannel.enableVibration(true);
-            notificationManager.createNotificationChannel(notificationChannel);
-        }
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this,NOTFICATION_CHANNEL_ID);
-        builder.setContentTitle(title)
-                .setContentText(content)
-                .setAutoCancel(false)
-                .setSmallIcon(R.mipmap.ic_launcher_round)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher_round));
-
-        Notification notification = builder.build();
-        notificationManager.notify(new Random().nextInt(),notification);
-    }
 
     private String getUrl(LatLng origin, LatLng dest, String directionMode) {
         // Origin of route
@@ -536,12 +512,4 @@ public class CariLokasi3 extends FragmentActivity implements OnMapReadyCallback,
             currentPolyline.remove();
         currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
     }
-
-    public PendingIntent getPendingIntent() {
-        Intent intent = new Intent(this,MyLocationService.class);
-        intent.setAction(MyLocationService.ACTION_PROCESS_UPDATE);
-        return PendingIntent.getBroadcast(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
-    }
-
 }
-

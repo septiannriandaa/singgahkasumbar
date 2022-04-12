@@ -19,27 +19,6 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-//        LocationManager lm = (LocationManager)
-//                getSystemService(Context. LOCATION_SERVICE ) ;
-//        boolean network_enabled = false;
-//        try {
-//            network_enabled = lm.isProviderEnabled(LocationManager. NETWORK_PROVIDER ) ;
-//        } catch (Exception e) {
-//            e.printStackTrace() ;
-//        }
-//        if(!network_enabled) {
-//            new AlertDialog.Builder(this)
-//                    .setMessage("Silahkan Aktifkan Internet Anda")
-//                    .setPositiveButton("Settings", new
-//                            DialogInterface.OnClickListener() {
-//                                @Override
-//                                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-//                                    startActivity(new Intent(Settings.ACTION_NETWORK_OPERATOR_SETTINGS));
-//                                }
-//                            })
-//                    .setNegativeButton("Cancel", null)
-//                    .show();
-//        }else{
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {

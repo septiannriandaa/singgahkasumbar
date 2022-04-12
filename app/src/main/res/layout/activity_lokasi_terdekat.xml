@@ -19,7 +19,7 @@
         android:layout_margin="60dp"
         android:text="Wisata Terdekat"
         android:textColor="#FFFFFF"
-        android:onClick="lokTer">
+        android:onClick="cariLokasiTerdekat">
     </Button>
     <androidx.cardview.widget.CardView
         app:cardCornerRadius="10dp"
